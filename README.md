@@ -1,5 +1,7 @@
 # addup-xslt
 
+[![Build Status](https://dev.azure.com/addupsolutions/addup-xslt/_apis/build/status/addupsolutions.addup-xslt?branchName=master)](https://dev.azure.com/addupsolutions/addup-xslt/_build/latest?definitionId=4&branchName=master)
+
 ## About 
 
 This repository provides a very simple tool allowing to apply an XSL transformation to an input XML file.
