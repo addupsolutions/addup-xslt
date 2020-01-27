@@ -1,0 +1,31 @@
+trigger:
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+  solution: 'xslt.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK'
+  inputs:
+    packageType: sdk
+    version: 3.0.100
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+- task: DotNetCoreCLI@2
+  displayName: 'Restore'
+  inputs:
+    command: 'restore'
+    feedsToUse: 'config'
+    nugetConfigPath: './nuget.config'
+- task: DotNetCoreCLI@2
+  displayName: 'Linux Build'
+  inputs:
+    command: 'build'
+    arguments: '-c $(buildConfiguration)'    
