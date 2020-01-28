@@ -27,17 +27,22 @@ steps:
   displayName: 'Build Windows .NET 4.7.2'
   inputs:
     command: 'build'
-    arguments: './xslt/netfx/xslt-netfx.csproj -c $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/net472/'          
+    projects: './xslt/netfx/xslt-netfx.csproj'
+    arguments: '-c $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/net472/'
 - task: DotNetCoreCLI@2
   displayName: 'Build Windows .NET Core'
   inputs:
     command: 'publish'
-    arguments: './xslt/netcore/xslt-netcore.csproj -c $(buildConfiguration) -r win-x64 --output $(Build.ArtifactStagingDirectory)/win-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true'          
+    publishWebProjects: false
+    projects: './xslt/netcore/xslt-netcore.csproj'
+    arguments: '-c $(buildConfiguration) -r win-x64 --output $(Build.ArtifactStagingDirectory)/win-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true'
 - task: DotNetCoreCLI@2
   displayName: 'Build Linux .NET Core'
   inputs:
     command: 'publish'
-    arguments: './xslt/netcore/xslt-netcore.csproj -c $(buildConfiguration) -r linux-x64 --output $(Build.ArtifactStagingDirectory)/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true'        
+    publishWebProjects: false
+    projects: './xslt/netcore/xslt-netcore.csproj'
+    arguments: '-c $(buildConfiguration) -r linux-x64 --output $(Build.ArtifactStagingDirectory)/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true'        
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/net472/xslt.exe'
