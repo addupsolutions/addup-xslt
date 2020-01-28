@@ -18,9 +18,9 @@ $ ./xslt input.xml transform.xsl output
 
 ## History
 
-## 1.0.0 - 2020/01/27
+## 1.0.0 - 2020/01/28
 
-* Initial release
+* Initial release. [Download here](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.0)
 
 ## Credits
 
