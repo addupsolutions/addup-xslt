@@ -20,6 +20,8 @@ $ ./xslt input.xml transform.xsl output
 
 ## 1.0.0 - 2020/01/28
 
+**Beware: the .NET 4.7.2 build in this release is broken. See issue [#1](https://github.com/addupsolutions/addup-xslt/issues/1)**
+
 * Initial release. [Download here](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.0)
 
 ## Credits
