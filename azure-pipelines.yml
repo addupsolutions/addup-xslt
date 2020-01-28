@@ -36,6 +36,7 @@ steps:
     publishWebProjects: false
     projects: './xslt/netcore/xslt-netcore.csproj'
     arguments: '-c $(buildConfiguration) -r win-x64 --output $(Build.ArtifactStagingDirectory)/win-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true'
+    zipAfterPublish: false
 - task: DotNetCoreCLI@2
   displayName: 'Build Linux .NET Core'
   inputs:
@@ -43,6 +44,7 @@ steps:
     publishWebProjects: false
     projects: './xslt/netcore/xslt-netcore.csproj'
     arguments: '-c $(buildConfiguration) -r linux-x64 --output $(Build.ArtifactStagingDirectory)/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true'        
+    zipAfterPublish: false    
 - task: PowerShell@2
   displayName: 'DEBUGGING'
   inputs:
