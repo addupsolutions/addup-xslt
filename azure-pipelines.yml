@@ -43,8 +43,12 @@ steps:
     publishWebProjects: false
     projects: './xslt/netcore/xslt-netcore.csproj'
     arguments: '-c $(buildConfiguration) -r linux-x64 --output $(Build.ArtifactStagingDirectory)/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true'        
+- task: PowerShell@2
+  displayName: 'DEBUGGING'
+  inputs:
+    targetType: 'inline'
+    script: 'ls $(Build.ArtifactStagingDirectory) -recurse'
 - task: ArchiveFiles@2
-  displayName: 'Zip .NET 4.7.2 Build'
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/net472/xslt.exe'
     includeRootFolder: false
@@ -53,18 +57,16 @@ steps:
     replaceExistingArchive: true
     verbose: true  
 - task: ArchiveFiles@2
-  displayName: 'Zip Windows x64 Build'
   inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-x64/netcore/xslt.exe'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/win-x64/xslt.exe'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/binaries/xslt-win.zip'
     replaceExistingArchive: true
     verbose: true      
 - task: ArchiveFiles@2
-  displayName: 'Zip Linux x64 Build'
   inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-x64/netcore/xslt'
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/linux-x64/xslt'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/binaries/xslt-linux.zip'
