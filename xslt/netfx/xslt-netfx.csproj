@@ -24,16 +24,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Condition="'$(Configuration)'=='Debug'" Remove="FodyWeavers.xsd" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="..\Program.cs" Link="Program.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Condition="'$(Configuration)'=='Release'" Include="Costura.Fody" Version="4.1.0" />
     <PackageReference Include="Mvp.Xml.NetStandard" Version="1.0.1" />
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
+  <Target Name="ILRepacker" Condition="'$(Configuration)' == 'Release'">
+    <!-- See https://github.com/ravibpatel/ILRepack.Lib.MSBuild.Task -->
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputPath)\*.exe" />
+      <InputAssemblies Include="$(OutputPath)\*.dll" />
+    </ItemGroup>
+    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="Exe"
+              OutputFile="$(OutputPath)\$(AssemblyName).exe" />
+  </Target>
 </Project>

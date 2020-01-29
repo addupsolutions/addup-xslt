@@ -2,7 +2,7 @@
   <!-- Reference: https://docs.microsoft.com/en-us/visualstudio/msbuild/customize-your-build?view=vs-2017 -->
   <PropertyGroup>
     <LangVersion>7.3</LangVersion>
-	<BaseVersion>1.0.0</BaseVersion>
+    <BaseVersion>1.0.1</BaseVersion>
     <RootNamespace>AddUp.XslTransformer</RootNamespace>
     <StartupObject>AddUp.XslTransformer.Program</StartupObject>
     <AssemblyName>xslt</AssemblyName>
@@ -22,10 +22,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>$(BaseVersion)$(VersionSuffix)</Version>
+    <Version>$(BaseVersion)</Version>
     <AssemblyVersion>$(BaseVersion).0</AssemblyVersion>
     <FileVersion>$(BaseVersion).0</FileVersion>
-    <InformationalVersion>$(BaseVersion).0$(VersionSuffix)</InformationalVersion>
+    <InformationalVersion>$(BaseVersion)$(VersionSuffix)</InformationalVersion>
   </PropertyGroup>
 
 </Project>

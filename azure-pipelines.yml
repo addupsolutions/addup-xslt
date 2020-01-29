@@ -23,6 +23,13 @@ steps:
     command: 'restore'
     feedsToUse: 'config'
     nugetConfigPath: './nuget.config'
+- task: MSBuild@1
+  displayName: 'Build Windows .NET 4.7.2'
+  inputs:
+    solution: './xslt/netfx/xslt-netfx.csproj'
+    msbuildArchitecture: 'x64'
+    configuration: 'Release'    
+    msbuildArguments: '/p:OutputPath=$(Build.ArtifactStagingDirectory)/net472/'
 - task: DotNetCoreCLI@2
   displayName: 'Build Windows .NET 4.7.2'
   inputs:
