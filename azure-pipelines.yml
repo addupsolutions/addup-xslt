@@ -46,11 +46,11 @@ steps:
     projects: './xslt/netcore/xslt-netcore.csproj'
     arguments: '-c $(buildConfiguration) -r linux-x64 --output $(Build.ArtifactStagingDirectory)/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true'        
     zipAfterPublish: false    
-- task: PowerShell@2
-  displayName: 'DEBUG #1'
-  inputs:
-    targetType: 'inline'
-    script: 'ls $(Build.ArtifactStagingDirectory) -recurse'
+# - task: PowerShell@2
+#   displayName: 'DEBUG #1'
+#   inputs:
+#     targetType: 'inline'
+#     script: 'ls $(Build.ArtifactStagingDirectory) -recurse'
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/net472/xslt.exe'
@@ -75,11 +75,11 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/binaries/xslt-linux.zip'
     replaceExistingArchive: true
     verbose: true          
-- task: PowerShell@2
-  displayName: 'DEBUG #2'
-  inputs:
-    targetType: 'inline'
-    script: 'ls $(Build.ArtifactStagingDirectory) -recurse'
+# - task: PowerShell@2
+#   displayName: 'DEBUG #2'
+#   inputs:
+#     targetType: 'inline'
+#     script: 'ls $(Build.ArtifactStagingDirectory) -recurse'
 - task: PublishBuildArtifacts@1
   displayName: Publish Packages as Build Artifacts
   inputs:
