@@ -51,7 +51,7 @@ Hence, credits go to:
 
 Without them, I don't doubt we'd have succeeded in crafting a working XSL transformation tool, however it would have been more work :)
 
-Credit also goes to [Fody/Costura](https://github.com/Fody/Costura) because we used it so that the .NET 4.7.2 version is a standalone executable!
+Credit also goes to [ILRepack](https://github.com/ravibpatel/ILRepack.Lib.MSBuild.Task) because we used it so that the .NET 4.7.2 version is a standalone executable!
 
 ## License
 
