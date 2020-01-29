@@ -31,12 +31,6 @@ steps:
     configuration: 'Release'    
     msbuildArguments: '/p:OutputPath=$(Build.ArtifactStagingDirectory)/net472/'
 - task: DotNetCoreCLI@2
-  displayName: 'Build Windows .NET 4.7.2'
-  inputs:
-    command: 'build'
-    projects: './xslt/netfx/xslt-netfx.csproj'
-    arguments: '-c $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/net472/'
-- task: DotNetCoreCLI@2
   displayName: 'Build Windows .NET Core'
   inputs:
     command: 'publish'
