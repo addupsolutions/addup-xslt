@@ -23,6 +23,15 @@ steps:
     command: 'restore'
     feedsToUse: 'config'
     nugetConfigPath: './nuget.config'
+- task: SonarCloudPrepare@1
+  displayName: 'Sonarcloud - Prepare'
+  inputs:
+    SonarCloud: 'Sonarcloud - addupsolutions-oss'
+    organization: 'addupsolutions-oss'
+    scannerMode: 'MSBuild'
+    projectKey: 'addup-xslt'
+    projectName: 'addup-xslt'
+    projectVersion: '1.0'
 - task: MSBuild@1
   displayName: 'Build Windows .NET 4.7.2'
   inputs:
@@ -30,6 +39,12 @@ steps:
     msbuildArchitecture: 'x64'
     configuration: 'Release'    
     msbuildArguments: '/p:OutputPath=$(Build.ArtifactStagingDirectory)/net472/'
+- task: SonarCloudAnalyze@1
+  displayName: 'Sonarcloud - Analyze'
+- task: SonarCloudPublish@1
+  displayName: 'Sonarcloud - Publish'
+  inputs:
+    pollingTimeoutSec: '300'      
 - task: DotNetCoreCLI@2
   displayName: 'Build Windows .NET Core'
   inputs:
