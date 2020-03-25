@@ -20,7 +20,8 @@ $ ./xslt input.xml transform.xsl output
 
 ## 1.0.2
 
-* No functional changes, simply tweaking the project so that Sonarcloud analysis works.
+* Wired Sonarcloud analysis
+* Upgraded dependencies
 
 ## [1.0.1](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.1) - 2020/01/29
 
