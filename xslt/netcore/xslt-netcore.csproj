@@ -24,7 +24,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Program.cs" Link="Program.cs" />
+    <Compile Include="..\netfx\Program.cs" Link="Program.cs" />
   </ItemGroup>
   
   <ItemGroup>

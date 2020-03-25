@@ -22,11 +22,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="..\Program.cs" Link="Program.cs" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Mvp.Xml.NetStandard" Version="1.0.1" />
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18">
