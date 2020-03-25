@@ -36,7 +36,8 @@ steps:
 - task: MSBuild@1
   displayName: 'Build Windows .NET 4.7.2'
   inputs:
-    solution: './xslt/netfx/xslt-netfx.csproj'
+    # Building a solution and not directly the csproj is required for Sonarcloud
+    solution: './xslt-netfx.sln'
     msbuildArchitecture: 'x64'
     configuration: 'Release'    
     msbuildArguments: '/p:OutputPath=$(Build.ArtifactStagingDirectory)/net472/'
