@@ -17,17 +17,23 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>xslt-netfx.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>xslt-netfx.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Mvp.Xml.NetStandard" Version="1.0.1" />
+    <PackageReference Include="Mvp.Xml.NetStandard" Version="1.1.1" />
     <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.5.0.15942">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
@@ -37,7 +43,6 @@
       <InputAssemblies Include="$(OutputPath)\*.exe" />
       <InputAssemblies Include="$(OutputPath)\*.dll" />
     </ItemGroup>
-    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="Exe"
-              OutputFile="$(OutputPath)\$(AssemblyName).exe" />
+    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(InputAssemblies)" TargetKind="Exe" OutputFile="$(OutputPath)\$(AssemblyName).exe" />
   </Target>
 </Project>
