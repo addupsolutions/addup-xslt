@@ -21,6 +21,7 @@ steps:
   displayName: 'Restore'
   inputs:
     command: 'restore'
+    projects: 'xslt.sln'
     feedsToUse: 'config'
     nugetConfigPath: './nuget.config'
 - task: SonarCloudPrepare@1
