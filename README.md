@@ -18,6 +18,10 @@ $ ./xslt input.xml transform.xsl output
 
 ## History
 
+## 1.0.2
+
+* No functional changes, simply tweaking the project so that Sonarcloud analysis works.
+
 ## [1.0.1](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.1) - 2020/01/29
 
 * Replaced [Fody/Costura](https://github.com/Fody/Costura) with [ILRepack](https://github.com/ravibpatel/ILRepack.Lib.MSBuild.Task) as the assembly merging tool for the .NET 4.7.2 build
