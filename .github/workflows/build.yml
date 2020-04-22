@@ -28,7 +28,7 @@ jobs:
     - name: Restore
       run: dotnet restore ${SOLUTION} --configfile ./nuget.config
     - name: Sonar Begin
-      run: dotnet sonarscanner begin /k:"addup-xslt"  /n:"addup-xslt" /o:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io 
+      run: dotnet sonarscanner begin /k:"addup-xslt"  /n:"addup-xslt" /version:"1.0.2" /o:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io 
     - name: Build
       run: dotnet build ${SOLUTION} --configuration ${BUILD_CONFIGURATION} --no-restore
     - name: Test
