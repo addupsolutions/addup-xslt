@@ -17,7 +17,8 @@ jobs:
     - name: Define global variables
       uses: allenevans/set-env@v1.0.0
       with:
-        SOLUTION: 'xslt.sln'
+        NETFX_SLN: 'xslt-netfx.sln'
+        NETCORE_SLN: 'xslt.sln'
         BUILD_CONFIGURATION: 'Release'
     - name: Checkout
       uses: actions/checkout@v2
@@ -28,14 +29,14 @@ jobs:
     - name: Install Sonar
       run: dotnet tool install --global dotnet-sonarscanner
     - name: Restore
-      run: dotnet restore %SOLUTION% --configfile ./nuget.config
+      run: dotnet restore %NETCORE_SLN% --configfile ./nuget.config
     - name: Sonar Begin
       run: dotnet sonarscanner begin /k:"addup-xslt"  /n:"addup-xslt" /version:"1.0.2" /o:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_GH_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io 
-    - name: Build
-      run: dotnet build %SOLUTION% --configuration %BUILD_CONFIGURATION% --no-restore
+    - name: Build .NET Core
+      run: dotnet build %NETCORE_SLN% --configuration %BUILD_CONFIGURATION% --no-restore
       if: always()
-    - name: Test
-      run: dotnet test %SOLUTION% --configuration %BUILD_CONFIGURATION% --no-build --no-restore --verbosity normal
-      if: always()
+    # - name: Test
+    #   run: dotnet test %NETCORE_SLN% --configuration %BUILD_CONFIGURATION% --no-build --no-restore --verbosity normal
+    #   if: always()
     - name: Sonar End
       run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_GH_TOKEN }}"
