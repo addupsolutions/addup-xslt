@@ -32,8 +32,7 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'addup-xslt'
     projectName: 'addup-xslt'
-    # extraProperties: |
-    #   sonar.sources=xslt
+    projectVersion: '1.0.2'
   continueOnError: true
 - task: MSBuild@1
   displayName: 'Build Windows .NET 4.7.2'
