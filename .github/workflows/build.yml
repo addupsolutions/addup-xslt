@@ -19,15 +19,6 @@ jobs:
       with:
         SOLUTION: 'xslt.sln'
         BUILD_CONFIGURATION: 'Release'
-    - name: Foo
-      run: |
-        set
-        echo %SOLUTION%
-        echo ${SOLUTION}
-        echo ${env.SOLUTION}
-        echo ${{ env.SOLUTION }}
-        echo ${env.Foo.SOLUTION}
-        echo ${{ env.Foo.SOLUTION }}
     - name: Checkout
       uses: actions/checkout@v2
     - name: Setup .NET Core
@@ -39,10 +30,12 @@ jobs:
     - name: Restore
       run: dotnet restore %SOLUTION% --configfile ./nuget.config
     - name: Sonar Begin
-      run: dotnet sonarscanner begin /k:"addup-xslt"  /n:"addup-xslt" /version:"1.0.2" /o:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io 
+      run: dotnet sonarscanner begin /k:"addup-xslt"  /n:"addup-xslt" /version:"1.0.2" /o:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_GH_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io 
     - name: Build
       run: dotnet build %SOLUTION% --configuration %BUILD_CONFIGURATION% --no-restore
+      if: always()
     - name: Test
       run: dotnet test %SOLUTION% --configuration %BUILD_CONFIGURATION% --no-build --no-restore --verbosity normal
-    - name: Sonar end
-      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      if: always()
+    - name: Sonar End
+      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_GH_TOKEN }}"
