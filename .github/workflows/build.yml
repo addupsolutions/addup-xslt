@@ -40,6 +40,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.3
       with:
@@ -54,7 +56,7 @@ jobs:
     - name: Begin Sonar Analysis
       run: dotnet sonarscanner begin /key:"addupsolutions_addup-xslt" /name:"addup-xslt" /version:"${{ steps.gitversion.outputs.majorMinorPatch }}" /organization:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io
     - name: Build Windows .NET 4.7.2
-      run: dotnet build "${{ env.NETFX_SOLUTION }}" --configuration "${{ env.BUILD_CONFIGURATION }}" --no-restore --output ./build/win-netfx/
+      run: msbuild "${{ env.NETFX_SOLUTION }}" /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=x64 /p:RestorePackages=false /p:OutputPath=./build/win-netfx/
     - name: End Sonar Analysis
       run: dotnet sonarscanner end /d:sonar.login="${{secrets.SONAR_TOKEN}}"
       env:

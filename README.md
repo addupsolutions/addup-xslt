@@ -22,6 +22,7 @@ $ ./xslt input.xml transform.xsl output
 
 * Wired Sonarcloud analysis
 * Upgraded dependencies
+* Now using [GitVersion](https://github.com/GitTools/GitVersion) to automatically handle assemblies versioning
 
 ## [1.0.1](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.1) - 2020/01/29
 
