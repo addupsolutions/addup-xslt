@@ -66,8 +66,6 @@ jobs:
       run: dotnet build ./xslt/netcore/xslt-netcore.csproj --configuration "${{ env.BUILD_CONFIGURATION }}" -r win-x64 --output ./build/win-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true
     - name: Build Linux .NET Core
       run: dotnet build ./xslt/netcore/xslt-netcore.csproj --configuration "${{ env.BUILD_CONFIGURATION }}" -r linux-x64 --output ./build/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true      
-    - name: Show Built files
-      run: dir build /S
     - name: Collect Windows .NET 4.7.2 executable
       uses: actions/upload-artifact@v2
       with:
@@ -81,6 +79,49 @@ jobs:
     - name: Collect Linux .NET Core executable
       uses: actions/upload-artifact@v2
       with:
-        name: xslt-win
+        name: xslt-linux
         path: ${{ github.workspace }}/build/linux-x64/xslt
+    ###########################################
+    # Release creation / publication
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: true
+        prerelease: false
+    - name: Upload Windows .NET 4.7.2 executable to Release
+      if: startsWith(github.ref, 'refs/tags/v') 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with: 
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ${{ github.workspace }}/build/win-netfx/xslt.exe
+        asset_name: xslt-net472
+        asset_content_type: application/octet-stream
+    - name: Upload Windows .NET Core executable to Release
+      if: startsWith(github.ref, 'refs/tags/v') 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with: 
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ${{ github.workspace }}/build/win-x64/xslt.exe
+        asset_name: xslt-win
+        asset_content_type: application/octet-stream
+    - name: Upload Linux .NET Core executable to Release
+      if: startsWith(github.ref, 'refs/tags/v') 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with: 
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ${{ github.workspace }}/build/linux-x64/xslt
+        asset_name: xslt-linux
+        asset_content_type: application/octet-stream                
 
