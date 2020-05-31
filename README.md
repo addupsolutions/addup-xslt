@@ -1,8 +1,9 @@
 # addup-xslt
 
-[![Build Status](https://dev.azure.com/addupsolutions/oss/_apis/build/status/addupsolutions.addup-xslt?branchName=master)](https://dev.azure.com/addupsolutions/oss/_build/latest?definitionId=5&branchName=master)
+![Build](https://github.com/addupsolutions/addup-xslt/workflows/Build/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=addupsolutions_addup-xslt=alert_status)](https://sonarcloud.io/dashboard?id=addupsolutions_addup-xslt)
 
-## About 
+## About
 
 This repository provides a very simple tool allowing to apply an XSL transformation to an input XML file.
 
