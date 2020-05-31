@@ -19,11 +19,11 @@ $ ./xslt input.xml transform.xsl output
 
 ## History
 
-## 1.0.2
+## [1.0.2](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.2) - 2020/05/31
 
-* Wired Sonarcloud analysis
-* Upgraded dependencies
-* Now using [GitVersion](https://github.com/GitTools/GitVersion) to automatically handle assemblies versioning
+* Wired Sonarcloud analysis.
+* Upgraded dependencies.
+* Now using [GitVersion](https://github.com/GitTools/GitVersion) to automatically handle assemblies versioning.
 
 ## [1.0.1](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.1) - 2020/01/29
 
