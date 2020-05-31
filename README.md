@@ -1,7 +1,7 @@
 # addup-xslt
 
 ![Build](https://github.com/addupsolutions/addup-xslt/workflows/Build/badge.svg)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=addupsolutions_addup-xslt=alert_status)](https://sonarcloud.io/dashboard?id=addupsolutions_addup-xslt)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=addupsolutions_addup-xslt&metric=alert_status)](https://sonarcloud.io/dashboard?id=addupsolutions_addup-xslt)
 
 ## About
 

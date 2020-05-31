@@ -57,7 +57,7 @@ jobs:
     - name: Begin Sonar Analysis
       run: dotnet sonarscanner begin /key:"addupsolutions_addup-xslt" /name:"addup-xslt" /version:"${{ steps.gitversion.outputs.majorMinorPatch }}" /organization:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io
     - name: Build Windows .NET 4.7.2
-      run: msbuild "${{ env.NETFX_SOLUTION }}" /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:RestorePackages=false /p:OutputPath=./build/win-netfx/
+      run: msbuild "${{ env.NETFX_SOLUTION }}" /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:RestorePackages=false /p:OutputPath=${{ github.workspace }}/build/win-netfx/
     - name: End Sonar Analysis
       run: dotnet sonarscanner end /d:sonar.login="${{secrets.SONAR_TOKEN}}"
       env:
@@ -68,3 +68,19 @@ jobs:
       run: dotnet build ./xslt/netcore/xslt-netcore.csproj --configuration "${{ env.BUILD_CONFIGURATION }}" -r linux-x64 --output ./build/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true      
     - name: Show Built files
       run: dir build /S
+    - name: Collect Windows .NET 4.7.2 executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: xslt-net472
+        path: ${{ github.workspace }}/build/win-netfx/xslt.exe
+    - name: Collect Windows .NET Core executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: xslt-win
+        path: ${{ github.workspace }}/build/win-x64/xslt.exe
+    - name: Collect Linux .NET Core executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: xslt-win
+        path: ${{ github.workspace }}/build/linux-x64/xslt
+
