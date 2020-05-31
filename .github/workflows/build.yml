@@ -82,7 +82,7 @@ jobs:
         name: xslt-linux
         path: ${{ github.workspace }}/build/linux-x64/xslt
     - name: Zip Windows .NET 4.7.2 executable
-      if: startsWith(github.ref, 'refs/tags/v') 
+      #if: startsWith(github.ref, 'refs/tags/v') 
       run: zip -b ${{ github.workspace }}/build/xslt-net472.zip ${{ github.workspace }}/build/win-netfx/xslt.exe
     ###########################################
     # Release creation / publication
