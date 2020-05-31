@@ -2,9 +2,15 @@ name: Build
 
 on:
   push:
+    tags: ["v*"]
     branches: [ master ]
   pull_request:
     branches: [ master ]
+
+env:
+  SOLUTION: xslt.sln
+  NETFX_SOLUTION: xslt-netfx.sln
+  BUILD_CONFIGURATION: Release
 
 defaults:
   run: 
@@ -14,29 +20,47 @@ jobs:
   build:
     runs-on: windows-2019
     steps:
-    - name: Define global variables
-      uses: allenevans/set-env@v1.0.0
-      with:
-        NETFX_SLN: 'xslt-netfx.sln'
-        NETCORE_SLN: 'xslt.sln'
-        BUILD_CONFIGURATION: 'Release'
+    - name: Dump Environment
+      run: |
+        echo "Solution        : ${{ env.SOLUTION }}" 
+        echo "Solution (netfx): ${{ env.NETFX_SOLUTION }}" 
+        echo "Configuration   : ${{ env.BUILD_CONFIGURATION }}"
     - name: Checkout
       uses: actions/checkout@v2
+      # Git history is needed by GitVersion
+    - name: Fetch all history for all tags and branches
+      run: git fetch --prune --unshallow
+      # Java 11 is needed by Sonar analyzer
+    - uses: actions/setup-java@v1
+      with:
+        java-version: 11
+        java-package: jdk
+        architecture: x64      
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Install Sonar
-      run: dotnet tool install --global dotnet-sonarscanner
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.3
+      with:
+          versionSpec: '5.x' 
+    - name: Use GitVersion
+      id: gitversion # step id used as reference for output values
+      uses: gittools/actions/gitversion/execute@v0.9.3          
+    - name: Install SonarScanner
+      run: dotnet tool install --global dotnet-sonarscanner      
     - name: Restore
-      run: dotnet restore %NETCORE_SLN% --configfile ./nuget.config
-    - name: Sonar Begin
-      run: dotnet sonarscanner begin /k:"addup-xslt"  /n:"addup-xslt" /version:"1.0.2" /o:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_GH_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io 
-    - name: Build .NET Core
-      run: dotnet build %NETCORE_SLN% --configuration %BUILD_CONFIGURATION% --no-restore
-      if: always()
-    # - name: Test
-    #   run: dotnet test %NETCORE_SLN% --configuration %BUILD_CONFIGURATION% --no-build --no-restore --verbosity normal
-    #   if: always()
-    - name: Sonar End
-      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_GH_TOKEN }}"
+      run: dotnet restore "${{ env.SOLUTION }}" --configfile ./nuget.config
+    - name: Begin Sonar Analysis
+      run: dotnet sonarscanner begin /key:"addupsolutions_addup-xslt" /name:"addup-xslt" /version:"${{ steps.gitversion.outputs.majorMinorPatch }}" /organization:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io
+    - name: Build Windows .NET 4.7.2
+      run: dotnet build "${{ env.NETFX_SOLUTION }}" --configuration "${{ env.BUILD_CONFIGURATION }}" --no-restore --output ./build/win-netfx/
+    - name: End Sonar Analysis
+      run: dotnet sonarscanner end /d:sonar.login="${{secrets.SONAR_TOKEN}}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build Windows .NET Core
+      run: dotnet build ./xslt/netcore/xslt-netcore.csproj --configuration "${{ env.BUILD_CONFIGURATION }}" -r win-x64 --output ./build/win-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true
+    - name: Build Linux .NET Core
+      run: dotnet build ./xslt/netcore/xslt-netcore.csproj --configuration "${{ env.BUILD_CONFIGURATION }}" -r linux-x64 --output ./build/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true      
+
