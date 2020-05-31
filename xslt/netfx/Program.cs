@@ -46,13 +46,13 @@ namespace AddUp.XslTransformer
 
             if (versionRequested())
             {
-                Console.Out.WriteLine($"AddUp {appName} Version {appFullVersion}");
+                Console.WriteLine($"AddUp {appName} Version {appFullVersion}");
                 return 0;
             }
 
             if (helpRequested())
             {
-                Console.Out.WriteLine($"AddUp {appName} Version {appVersion}");
+                Console.WriteLine($"AddUp {appName} Version {appVersion}");
                 Console.WriteLine("Usage:");
                 Console.WriteLine($"\t{appName} -h (--help)              display this help and exit");
                 Console.WriteLine($"\t{appName} -v (--version)           output version information and exit");
