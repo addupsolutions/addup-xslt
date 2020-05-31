@@ -19,18 +19,18 @@ $ ./xslt input.xml transform.xsl output
 
 ## History
 
-## [1.0.2](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.2) - 2020/05/31
+### [1.0.2](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.2) - 2020/05/31
 
 * Wired Sonarcloud analysis.
 * Upgraded dependencies.
 * Now using [GitVersion](https://github.com/GitTools/GitVersion) to automatically handle assemblies versioning.
 
-## [1.0.1](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.1) - 2020/01/29
+### [1.0.1](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.1) - 2020/01/29
 
 * Replaced [Fody/Costura](https://github.com/Fody/Costura) with [ILRepack](https://github.com/ravibpatel/ILRepack.Lib.MSBuild.Task) as the assembly merging tool for the .NET 4.7.2 build
 * Fixed the .NET 4.7.2 build  (issue [#1](https://github.com/addupsolutions/addup-xslt/issues/1)).
 
-## [1.0.0](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.0) - 2020/01/28
+### [1.0.0](https://github.com/addupsolutions/addup-xslt/releases/tag/v1.0.0) - 2020/01/28
 
 **Beware: the .NET 4.7.2 build in this release is broken. See issue [#1](https://github.com/addupsolutions/addup-xslt/issues/1)**
 
