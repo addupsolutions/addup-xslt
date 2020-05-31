@@ -21,7 +21,7 @@ namespace AddUp.XslTransformer
                     return arg == "-h" || arg == "--help";
                 }
 
-                return false;                    
+                return false;
             }
 
             bool versionRequested()
@@ -37,24 +37,26 @@ namespace AddUp.XslTransformer
 
             var appName = Assembly.GetExecutingAssembly().GetName().Name;
 
-            var showHelp = helpRequested();
-            var showVersion = versionRequested();
-            
-            if (showHelp || showVersion)
-            {
-                var appVersion = ((AssemblyInformationalVersionAttribute)Assembly
-                    .GetExecutingAssembly()
-                    .GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute)))
-                    .InformationalVersion;
+            var appFullVersion = ((AssemblyInformationalVersionAttribute)Assembly
+                .GetExecutingAssembly()
+                .GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute)))
+                .InformationalVersion;
 
+            var appVersion = appFullVersion.IndexOf('+') >= 0 ? appFullVersion.Substring(0, appFullVersion.IndexOf('+')) : appFullVersion;
+
+            if (versionRequested())
+            {
+                Console.Out.WriteLine($"AddUp {appName} Version {appFullVersion}");
+                return 0;
+            }
+
+            if (helpRequested())
+            {
                 Console.Out.WriteLine($"AddUp {appName} Version {appVersion}");
-                if (showHelp)
-                {
-                    Console.WriteLine("Usage:");
-                    Console.WriteLine($"\t{appName} -h (--help)              display this help and exit");
-                    Console.WriteLine($"\t{appName} -v (--version)           output version information and exit");
-                    Console.WriteLine($"\t{appName} source transform output  transform source XML file with transform XSL file into output file");                    
-                }
+                Console.WriteLine("Usage:");
+                Console.WriteLine($"\t{appName} -h (--help)              display this help and exit");
+                Console.WriteLine($"\t{appName} -v (--version)           output version information and exit");
+                Console.WriteLine($"\t{appName} source transform output  transform source XML file with transform XSL file into output file");
 
                 return 0;
             }
