@@ -31,7 +31,8 @@ jobs:
     - name: Fetch all history for all tags and branches
       run: git fetch --prune --unshallow
       # Java 11 is needed by Sonar analyzer
-    - uses: actions/setup-java@v1
+    - name: Setup Java 11
+      uses: actions/setup-java@v1
       with:
         java-version: 11
         java-package: jdk
@@ -65,4 +66,5 @@ jobs:
       run: dotnet build ./xslt/netcore/xslt-netcore.csproj --configuration "${{ env.BUILD_CONFIGURATION }}" -r win-x64 --output ./build/win-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true
     - name: Build Linux .NET Core
       run: dotnet build ./xslt/netcore/xslt-netcore.csproj --configuration "${{ env.BUILD_CONFIGURATION }}" -r linux-x64 --output ./build/linux-x64/ /p:PublishSingleFile=true /p:PublishTrimmed=true      
-
+    - name: Show Built files
+      run: dir build /S
