@@ -43,6 +43,7 @@ In our in-house CI, we are using an XSL stylesheet to transform Unit Tests `.trx
 This is when we found the [XSLTransform](https://github.com/Zoomicon/tranXform/tree/master/src/XSLTransform) project.
 
 However:
+
 * **XSLTransform** is written using VB.NET which is... not our prefered language, but more importantly
 * It targets .NET 2.0
 * Makes use of a Codeplex-hosted Nuget package, [Mvp.Xml](https://archive.codeplex.com/?p=mvpxml), also targeting the full framework.
@@ -52,6 +53,7 @@ Hopefully, **Mvp.Xml** was ported to .NET Standard here: [Mvp.Xml.NetStandard](h
 Therefore, our version of the tool is based on **Mvp.Xml.NetStandard** and targets both .NET 4.7.2 and .NET Core 3.0.
 
 Hence, credits go to:
+
 * [Zoomicon](https://github.com/Zoomicon) user for providing the initial tool
 * The unnnamed Microsoft MVP who made **Mvp.Xml** available.
 * [keimpema](https://github.com/keimpema) user for porting **Mvp.Xml** to .NET Standard.
