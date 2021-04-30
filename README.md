@@ -2,7 +2,6 @@
 
 [![Build](https://github.com/addupsolutions/addup-xslt/workflows/Build/badge.svg)](https://github.com/addupsolutions/addup-xslt/actions?query=workflow%3ABuild)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=addupsolutions_addup-xslt&metric=alert_status)](https://sonarcloud.io/dashboard?id=addupsolutions_addup-xslt)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=addupsolutions/addup-xslt)](https://dependabot.com)
 
 ## About
 
