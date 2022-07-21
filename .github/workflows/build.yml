@@ -3,9 +3,9 @@ name: Build
 on:
   push:
     tags: ["v*"]
-    branches: [ master ]
+    branches: ["**"]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 env:
   SOLUTION: xslt.sln
@@ -13,123 +13,124 @@ env:
   BUILD_CONFIGURATION: Release
 
 defaults:
-  run: 
+  run:
     shell: cmd
 
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
-    - name: Dump Environment
-      run: |
-        echo "Solution        : ${{ env.SOLUTION }}" 
-        echo "Solution (netfx): ${{ env.NETFX_SOLUTION }}" 
-        echo "Configuration   : ${{ env.BUILD_CONFIGURATION }}"
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 # See https://github.com/GitTools/GitVersion/issues/2301      
-      # Java 11 is needed by Sonar analyzer
-    - name: Setup Java 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-        java-package: jdk
-        architecture: x64      
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.101
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.11
-      with:
-          versionSpec: '5.x' 
-    - name: Use GitVersion
-      id: gitversion # step id used as reference for output values
-      uses: gittools/actions/gitversion/execute@v0.9.11
-    - name: Install SonarScanner
-      run: dotnet tool install --global dotnet-sonarscanner      
-    - name: Restore
-      run: dotnet restore "${{ env.SOLUTION }}" --configfile ./nuget.config
-    - name: Begin Sonar Analysis
-      run: dotnet sonarscanner begin /key:"addupsolutions_addup-xslt" /name:"addup-xslt" /version:"${{ steps.gitversion.outputs.majorMinorPatch }}" /organization:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io
-    - name: Build Windows .NET 4.7.2
-      run: msbuild "${{ env.NETFX_SOLUTION }}" /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:RestorePackages=false /p:OutputPath=${{ github.workspace }}/build/win-netfx/
-    - name: End Sonar Analysis
-      run: dotnet sonarscanner end /d:sonar.login="${{secrets.SONAR_TOKEN}}"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Build Windows .NET Core
-      run: dotnet publish ./xslt/netcore/xslt-netcore.csproj -c "${{ env.BUILD_CONFIGURATION }}" -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -o ./build/win-x64/ 
-    - name: Build Linux .NET Core
-      run: dotnet publish ./xslt/netcore/xslt-netcore.csproj -c "${{ env.BUILD_CONFIGURATION }}" -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -o ./build/linux-x64/
-    - name: Collect Windows .NET 4.7.2 executable
-      uses: actions/upload-artifact@v2
-      with:
-        name: xslt-net472
-        path: ${{ github.workspace }}/build/win-netfx/xslt.exe
-    - name: Collect Windows .NET Core executable
-      uses: actions/upload-artifact@v2
-      with:
-        name: xslt-win
-        path: ${{ github.workspace }}/build/win-x64/xslt.exe
-    - name: Collect Linux .NET Core executable
-      uses: actions/upload-artifact@v2
-      with:
-        name: xslt-linux
-        path: ${{ github.workspace }}/build/linux-x64/xslt
-    ###########################################
-    # Release creation / publication
-    - name: Create Release
-      if: startsWith(github.ref, 'refs/tags/v')
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: ${{ github.ref }}
-        draft: true
-        prerelease: false    
-    - name: Zip Windows .NET 4.7.2 executable
-      if: startsWith(github.ref, 'refs/tags/v') 
-      run: 7z a ${{ github.workspace }}/build/xslt-net472.zip ${{ github.workspace }}/build/win-netfx/xslt.exe        
-    - name: Upload Windows .NET 4.7.2 executable to Release
-      if: startsWith(github.ref, 'refs/tags/v') 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with: 
-        upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ${{ github.workspace }}/build/xslt-net472.zip
-        asset_name: xslt-net472.zip
-        asset_content_type: application/zip
-    - name: Zip Windows .NET Core executable
-      if: startsWith(github.ref, 'refs/tags/v') 
-      run: 7z a ${{ github.workspace }}/build/xslt-win.zip ${{ github.workspace }}/build/win-x64/xslt.exe             
-    - name: Upload Windows .NET Core executable to Release
-      if: startsWith(github.ref, 'refs/tags/v') 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with: 
-        upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ${{ github.workspace }}/build/xslt-win.zip
-        asset_name: xslt-win.zip
-        asset_content_type: application/zip
-    - name: Zip Linux .NET Core executable
-      if: startsWith(github.ref, 'refs/tags/v') 
-      run: 7z a ${{ github.workspace }}/build/xslt-linux.zip ${{ github.workspace }}/build/linux-x64/xslt       
-    - name: Upload Linux .NET Core executable to Release
-      if: startsWith(github.ref, 'refs/tags/v') 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with: 
-        upload_url: ${{ steps.create_release.outputs.upload_url }} 
-        asset_path: ${{ github.workspace }}/build/xslt-linux.zip
-        asset_name: xslt-linux.zip
-        asset_content_type: application/zip                
-
+      - name: Dump Environment
+        run: |
+          echo "Solution        : ${{ env.SOLUTION }}" 
+          echo "Solution (netfx): ${{ env.NETFX_SOLUTION }}" 
+          echo "Configuration   : ${{ env.BUILD_CONFIGURATION }}"
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # See https://github.com/GitTools/GitVersion/issues/2301
+        # Java 11 is needed by Sonar analyzer
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          java-package: jdk
+          architecture: x64
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v1
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.13
+        with:
+          versionSpec: "5.x"
+      - name: Use GitVersion
+        id: gitversion # step id used as reference for output values
+        uses: gittools/actions/gitversion/execute@v0.9.13
+      - name: Install SonarScanner
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        run: dotnet tool install --global dotnet-sonarscanner
+      - name: Restore
+        run: dotnet restore "${{ env.SOLUTION }}" --configfile ./nuget.config
+      - name: Begin Sonar Analysis
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        run: dotnet sonarscanner begin /key:"addupsolutions_addup-xslt" /name:"addup-xslt" /version:"${{ steps.gitversion.outputs.majorMinorPatch }}" /organization:"addupsolutions-oss" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.verbose=true /d:sonar.host.url=https://sonarcloud.io
+      - name: Build Windows .NET 4.7.2
+        run: msbuild "${{ env.NETFX_SOLUTION }}" /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:RestorePackages=false /p:OutputPath=${{ github.workspace }}/build/win-netfx/
+      - name: End Sonar Analysis
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        run: dotnet sonarscanner end /d:sonar.login="${{secrets.SONAR_TOKEN}}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Windows .NET Core
+        run: dotnet publish ./xslt/netcore/xslt-netcore.csproj -c "${{ env.BUILD_CONFIGURATION }}" -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -o ./build/win-x64/
+      - name: Build Linux .NET Core
+        run: dotnet publish ./xslt/netcore/xslt-netcore.csproj -c "${{ env.BUILD_CONFIGURATION }}" -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true -o ./build/linux-x64/
+      - name: Collect Windows .NET 4.7.2 executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: xslt-net472
+          path: ${{ github.workspace }}/build/win-netfx/xslt.exe
+      - name: Collect Windows .NET Core executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: xslt-win
+          path: ${{ github.workspace }}/build/win-x64/xslt.exe
+      - name: Collect Linux .NET Core executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: xslt-linux
+          path: ${{ github.workspace }}/build/linux-x64/xslt
+      ###########################################
+      # Release creation / publication
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+          prerelease: false
+      - name: Zip Windows .NET 4.7.2 executable
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: 7z a ${{ github.workspace }}/build/xslt-net472.zip ${{ github.workspace }}/build/win-netfx/xslt.exe
+      - name: Upload Windows .NET 4.7.2 executable to Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/build/xslt-net472.zip
+          asset_name: xslt-net472.zip
+          asset_content_type: application/zip
+      - name: Zip Windows .NET Core executable
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: 7z a ${{ github.workspace }}/build/xslt-win.zip ${{ github.workspace }}/build/win-x64/xslt.exe
+      - name: Upload Windows .NET Core executable to Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/build/xslt-win.zip
+          asset_name: xslt-win.zip
+          asset_content_type: application/zip
+      - name: Zip Linux .NET Core executable
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: 7z a ${{ github.workspace }}/build/xslt-linux.zip ${{ github.workspace }}/build/linux-x64/xslt
+      - name: Upload Linux .NET Core executable to Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/build/xslt-linux.zip
+          asset_name: xslt-linux.zip
+          asset_content_type: application/zip
